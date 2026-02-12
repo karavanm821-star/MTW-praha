@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Metro mapa</title>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div id="map"></div>
+
+<div class="controls">
+  <label><input type="checkbox" checked onclick="toggleLine('S1')"> S1</label>
+  <label><input type="checkbox" checked onclick="toggleLine('S2')"> S2</label>
+  <label><input type="checkbox" checked onclick="toggleLine('S3')"> S3</label>
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
