@@ -3,26 +3,38 @@ var map = L.map('map', {
   minZoom: -2
 });
 
-var bounds = [[0,0], [2000,2000]];
-var image = L.imageOverlay('world.png', bounds).addTo(map);
-map.fitBounds(bounds);
+var img = new Image();
+img.src = "map.png";
 
-fetch('lines.svg')
-  .then(response => response.text())
-  .then(data => {
-    var parser = new DOMParser();
-    var svg = parser.parseFromString(data, "image/svg+xml").documentElement;
-    svg.style.position = "absolute";
-    svg.style.width = "100%";
-    svg.style.height = "100%";
-    document.getElementById("map").appendChild(svg);
-  });
+img.onload = function() {
+  var width = img.width;
+  var height = img.height;
+  var bounds = [[0,0], [height,width]];
 
-function toggleLine(id) {
-  var line = document.getElementById(id);
-  if (line.style.display === "none") {
-    line.style.display = "inline";
-  } else {
-    line.style.display = "none";
-  }
-}
+  // Mapa
+  L.imageOverlay("map.png", bounds).addTo(map);
+  map.fitBounds(bounds);
+
+  // Načtení SVG
+  fetch("lines.svg")
+    .then(res => res.text())
+    .then(data => {
+      var parser = new DOMParser();
+      var svgDoc = parser.parseFromString(data, "image/svg+xml");
+      var svgElement = svgDoc.documentElement;
+
+      svgElement.setAttribute("viewBox", `0 0 ${width} ${height}`);
+
+      var overlay = L.svgOverlay(svgElement, bounds);
+      overlay.addTo(map);
+
+      window.toggleLine = function(line) {
+        var elements = svgElement.querySelectorAll("." + line);
+        elements.forEach(el => {
+          el.style.display =
+            el.style.display === "none" ? "block" : "none";
+        });
+      };
+    });
+};
+
